@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-7*mh$&int%^6$)idk^+f7!$y^jk7cn+eeq(+n9mmi!^+_!g9ov
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['loclhost:8000','8e82-122-160-84-130.ngrok-free.app']
-CSRF_TRUSTED_ORIGINS=['http://localhost:8000','https://8e82-122-160-84-130.ngrok-free.app']
+ALLOWED_HOSTS = ['loclhost:8000','4325-122-160-84-130.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS=['http://localhost:8000','https://4325-122-160-84-130.ngrok-free.app']
 
 
 # Application definition
@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'github_webhook.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'changeddk',
+        'USER':'postgres',
+        'HOST':'localhost',
+        'PASSWORD':'admin',
+        'PORT':5432,
     }
 }
 
