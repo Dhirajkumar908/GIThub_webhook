@@ -10,16 +10,14 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <script>
-        body{
-            margin:0px;
-            padding:0px;
-            font-size:12px
-        }
-    </script>
   </head>
   <body>
-    <div class="alert alert-success text-center"><h4>Github webhook Response</h4></div>
+    <div class="alert alert-success text-center">
+      <h4>Github webhook Response</h4>
+    </div>
+    {% comment %} <div id="data-container">
+      <!-- The data will be loaded here -->
+  </div> {% endcomment %}
     <div class="row justify-content-center">
       <div class="col-8 border mt-2">
         <h4>Pushed on Github Repositories</h4>
@@ -32,15 +30,8 @@
               <th scope="col">DateTime</th>
             </tr>
           </thead>
-          <tbody>
-            {% for data in push_data %}
-            <tr>
-              <td>{{data.id}}</td>
-              <td>{{data.author}}</td>
-              <td>{{data.branch}}</td>
-              <td>{{data.datetime}}</td>
-            </tr>
-            {% endfor %}
+          <tbody id="data-container">
+            <!-- The data will be loaded here -->
           </tbody>
         </table>
       </div>
@@ -59,52 +50,130 @@
               <th scope="col">DateTime</th>
             </tr>
           </thead>
-          <tbody>
-            {% for data in pull_request %}
-            <tr>
-              <td>{{data.id}}</td>
-              <td>{{data.author}}</td>
-              <td>{{data.from_branch}}</td>
-              <td>{{data.to_branch}}</td>
-              <td>{{data.datetime}}</td>
-            </tr>
-            {% endfor %}
+          <tbody id="pull_data-container">
+           
           </tbody>
         </table>
       </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-8 border mt-2">
-          <h4>Merge on Github Repositories</h4>
-          <table class="table table-success table-striped">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Author</th>
-                <th scope="col">From Branch</th>
-                <th scope="col">To Branch</th>
-                <th scope="col">DateTime</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for data in pull_request %}
-              <tr>
-                <td>{{data.id}}</td>
-                <td>{{data.author}}</td>
-                <td>{{data.from_branch}}</td>
-                <td>{{data.to_branch}}</td>
-                <td>{{data.datetime}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+      <div class="col-8 border mt-2">
+        <h4>Merge on Github Repositories</h4>
+        <table class="table table-success table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Author</th>
+              <th scope="col">From Branch</th>
+              <th scope="col">To Branch</th>
+              <th scope="col">DateTime</th>
+            </tr>
+          </thead>
+          <tbody id="marge_data-container">
+           
+          </tbody>
+        </table>
       </div>
+    </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+       function fetchData() {
+            $.ajax({
+                url: "{% url 'push' %}", // Your API URL
+                method: 'GET',
+                success: function(response) {
+                    // Clear the current content
+                    $('#data-container').empty();
+
+                    // Iterate over the response data and append it to the container
+                    $.each(response, function(index, item) {
+                        var dataHtml = '<tr>' +
+                                        '<td>' + (index + 1) + '</td>' + 
+                                        '<td>' + item.author + '</td>' + 
+                                        '<td>' + item.branch + '</td>' +  
+                                        '<td>' + item.datetime + '</td>' + 
+                                      '</tr>';
+                        $('#data-container').append(dataHtml);
+                    });
+                },
+                error: function(error) {
+                    console.log("Error fetching data", error);
+                }
+            });
+        }
+///call pull_request  and merge event API
+function fetchData_other() {
+  $.ajax({
+      url: "{% url 'pull_request' %}", // Your API URL
+      method: 'GET',
+      success: function(response) {
+          // Clear the current content
+          var pullDataTable=$('#pull_data-container');
+pullDataTable.empty();
+          // Iterate over the response data and append it to the container
+          $.each(response, function(index, item) {
+              var dataHtml = '<tr>' +
+                              '<td>' + (index + 1) + '</td>' + 
+                              '<td>' + item.author + '</td>' + 
+                              '<td>' + item.from_branch + '</td>' + 
+                              '<td>' + item.to_branch + '</td>' + 
+                              '<td>' + item.datetime + '</td>' + 
+                            '</tr>';
+              pullDataTable.append(dataHtml);
+          });
+      },
+      error: function(error) {
+          console.log("Error fetching data", error);
+      }
+  });
+}
+
+
+function fetchData_marge() {
+  $.ajax({
+      url: "{% url 'merge_event' %}", // Your API URL
+      method: 'GET',
+      success: function(response) {
+          // Clear the current content
+          var pullDataTable=$('#marge_data-container');
+pullDataTable.empty();
+          // Iterate over the response data and append it to the container
+          $.each(response, function(index, item) {
+              var dataHtml = '<tr>' +
+                              '<td>' + (index + 1) + '</td>' + 
+                              '<td>' + item.author + '</td>' + 
+                              '<td>' + item.from_branch + '</td>' + 
+                              '<td>' + item.to_branch + '</td>' + 
+                              '<td>' + item.datetime + '</td>' + 
+                            '</tr>';
+              pullDataTable.append(dataHtml);
+          });
+      },
+      error: function(error) {
+          console.log("Error fetching data", error);
+      }
+  });
+}
+
+///call function
+$(document).ready(function(){
+  fetchData();
+  fetchData_other();
+  fetchData_marge()
+
+  setInterval(function(){
+    fetchData();
+    fetchData_other();
+    fetchData_marge()
+  }, 5000);
+
+});
+            </script>
   </body>
 </html>

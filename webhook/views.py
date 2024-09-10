@@ -3,7 +3,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
-
+from .serializers import *
 from .models import *
 # Create your views here.
 
@@ -13,6 +13,29 @@ def index(request):
     marge=Merge_event.objects.all()
     context={'push_data':push_data, 'pull_request':pull_request, 'marge':marge}
     return render(request, 'index.html',context)
+
+@csrf_exempt
+def push(request):
+    '''List all push event data, or create a new snippet.'''
+    if request.method=="GET":
+        push_event_data=Push_event.objects.all()
+        serializer= Push_event_serializer(push_event_data, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    
+@csrf_exempt
+def pull_request(request):
+    if request.method=="GET":
+        pull_request_data=Pull_request.objects.all()
+        serializer=Pull_request_serializer(pull_request_data, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    
+@csrf_exempt
+def merge_event(request):
+    if request.method=='GET':
+        merge_event_data=Merge_event.objects.all()
+        serializer=Merge_event_serializer(merge_event_data, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 
 @csrf_exempt
 def github_webhook(request):

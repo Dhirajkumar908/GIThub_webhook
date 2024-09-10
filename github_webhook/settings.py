@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-7*mh$&int%^6$)idk^+f7!$y^jk7cn+eeq(+n9mmi!^+_!g9ov
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['loclhost:8000','4325-122-160-84-130.ngrok-free.app']
-CSRF_TRUSTED_ORIGINS=['http://localhost:8000','https://4325-122-160-84-130.ngrok-free.app']
+ALLOWED_HOSTS = ['loclhost:8000','9821-122-160-84-130.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS=['http://localhost:8000','https://9821-122-160-84-130.ngrok-free.app']
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webhook'
+    'webhook',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
