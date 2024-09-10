@@ -8,7 +8,11 @@ from .models import *
 # Create your views here.
 
 def index(request):
-    return HttpResponse('This page is working')
+    push_data=Push_event.objects.all()
+    pull_request=Pull_request.objects.all()
+    marge=Merge_event.objects.all()
+    context={'push_data':push_data, 'pull_request':pull_request, 'marge':marge}
+    return render(request, 'index.html',context)
 
 @csrf_exempt
 def github_webhook(request):
